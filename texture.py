@@ -45,3 +45,43 @@ class Textured:
             GL.glBindTexture(texture.type, texture.glid)
             uniforms[name] = index
         self.drawable.draw(primitives=primitives, **uniforms)
+
+class CubeMapTexture(Textured):
+    def __init__(self, mesh, skybox_dir, ext):
+        try:
+            faces = ['back', 'front', 'top', 'bottom', 'right', 'left']
+
+            self.glid = GL.glGenTextures(1)
+            self.type = GL.GL_TEXTURE_CUBE_MAP
+
+            GL.glBindTexture(self.type, self.glid)
+            for i, face in enumerate(faces):
+                skybox_face = Image.open(f'{skybox_dir}/{face}.{ext}').convert('RGBA')
+                GL.glTexImage2D(GL.GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0,
+                                GL.GL_RGBA, skybox_face.width, skybox_face.height, 0,
+                                GL.GL_RGBA, GL.GL_UNSIGNED_BYTE, skybox_face.tobytes())
+                print(f'Loaded skybox face {face}.{ext} ({skybox_face.width}x{skybox_face.height})')
+
+            GL.glTexParameteri(self.type, GL.GL_TEXTURE_MIN_FILTER, GL.GL_LINEAR)
+            GL.glTexParameteri(self.type, GL.GL_TEXTURE_MAG_FILTER, GL.GL_LINEAR)
+            GL.glTexParameteri(self.type, GL.GL_TEXTURE_WRAP_S, GL.GL_CLAMP_TO_EDGE)
+            GL.glTexParameteri(self.type, GL.GL_TEXTURE_WRAP_T, GL.GL_CLAMP_TO_EDGE)
+            GL.glTexParameteri(self.type, GL.GL_TEXTURE_WRAP_R, GL.GL_CLAMP_TO_EDGE)
+            GL.glGenerateMipmap(self.type)
+            super().__init__(mesh, skybox_map=self)
+        except FileNotFoundError:
+            print("ERROR: unable to load skybox face %s" % face)
+
+    def draw(self, primitives=GL.GL_TRIANGLES, **uniforms):
+        GL.glDepthFunc(GL.GL_LEQUAL)
+
+        for index, (name, texture) in enumerate(self.textures.items()):
+            GL.glActiveTexture(GL.GL_TEXTURE0 + index)
+            GL.glBindTexture(texture.type, texture.glid)
+            GL.glDrawArrays(GL.GL_TRIANGLES, 0, 36)
+            GL.glBindVertexArray(0)
+            uniforms[name] = index
+            
+        self.drawable.draw(primitives=primitives, **uniforms)
+
+        GL.glDepthFunc(GL.GL_LESS)
