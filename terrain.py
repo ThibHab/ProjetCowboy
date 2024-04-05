@@ -35,16 +35,16 @@ class Terrain(Mesh):
                 river[i][j]=1
                 if baseriver[i][j]<-0.9:
                     river[i][j]=0
-        pente=fenetre(convolve2D(river,7,5),-0.3,1)
+        self.pente=fenetre(convolve2D(river,7,5),-0.3,1)
         f,n=fractale(size,50,5)
         s=slope(f,size,0.5)
         res=redistrib(s,n,4)
         for i in range(size):
             for j in range(size):
-                if pente[i][j]<0:
-                    res[i][j]=pente[i][j]
+                if self.pente[i][j]<0:
+                    res[i][j]=self.pente[i][j]
                 else:
-                    res[i][j]*=pente[i][j]
+                    res[i][j]*=self.pente[i][j]
         return res
     
     def __init__(self, shader,size,light_dir):

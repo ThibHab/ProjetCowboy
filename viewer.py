@@ -43,11 +43,11 @@ def main():
     light_dir = (-0.5, -1, 0)
     viewer.add(Skybox(skybox_shader))
     terrain=Terrain(terrain_shader,200,light_dir)
-    #river=River(river_shader,terrain.heigth,light_dir=light_dir)
-    viewer.add(Fire(particle_shader))
-    viewer.add(Smoke(particle_shader))
+    river=River(river_shader,terrain.pente,light_dir=light_dir)
+    #viewer.add(Fire(particle_shader))
+    #viewer.add(Smoke(particle_shader))
     viewer.add(terrain)
-    #viewer.add(river)
+    viewer.add(river)
     viewer.run()
 
 
