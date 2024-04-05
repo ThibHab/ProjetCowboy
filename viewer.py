@@ -7,6 +7,7 @@ import numpy as np                  # all matrix manipulations & OpenGL args
 from core import Shader, Viewer, Mesh, load
 from texture import Texture, Textured
 from terrain import Terrain
+from water import River
 
 
 class Axis(Mesh):
@@ -24,12 +25,15 @@ def main():
     """ create a window, add scene objects, then run rendering loop """
     viewer = Viewer()
     shader = Shader("terrain.vert", "terrain.frag")
+    rivershader = Shader("water.vert", "water.frag")
     # start rendering loop
     light_dir = (-0.5, -1, 0)
-    terrain=Terrain(shader,200,light_dir=light_dir)
+    terrain=Terrain(shader,200,light_dir)
+    #river=River(rivershader,terrain.heigth,light_dir=light_dir)
     axis=Axis(shader)
     viewer.add(axis)
     viewer.add(terrain)
+    #viewer.add(river)
     viewer.run()
 
 
