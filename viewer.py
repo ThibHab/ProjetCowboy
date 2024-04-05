@@ -50,6 +50,5 @@ def main():
     #viewer.add(river)
     viewer.run()
 
-
 if __name__ == '__main__':
     main()                     # main function keeps variables locally scoped

@@ -25,7 +25,7 @@ def generate_coords_cone(n):
 
         #assigning values to x,y,z
         x = local_r * np.cos(t)
-        y =  h 
+        y =  h
         z =  local_r*np.sin(t)
         points.append((x, -y+a, z))
     return tuple(map(tuple, points))
@@ -50,12 +50,11 @@ def generate_coords_Cloud(n):
         theta = np.random.random() * 2 * np.pi
 
         #assigning values to x,y,z
-        x =  local_r * np.cos(theta) 
+        x =  local_r * np.cos(theta)
         y =  local_r * np.sin(theta) - a/3
         z =  r * np.sqrt(np.random.random())
         points.append((x,y+a, z))
     return tuple(map(tuple, points))
-
 
 def compute_color_smoke(coords):
     # Normalize the distance to range between 0 and 1
@@ -68,14 +67,13 @@ def compute_color_smoke(coords):
 
 # ----------------------- Fire ---------------------------------------
 class Fire(Mesh):
-    
+
     def __init__(self, shader):
 
         GL.glPointSize(37)
         self.coords = generate_coords_cone(pointnumber)
         self.colors = compute_color_fire(self.coords)
         self.life = [np.random.random_integers(500, 800) for _ in range(pointnumber)]
-        
 
         # send as position attribute to GPU, set uniform variable global_color.
         # GL_STREAM_DRAW tells OpenGL that attributes of this object
@@ -96,7 +94,7 @@ class Fire(Mesh):
             else:
                 # Move the particle vertically upward
                 coords_list[i] = (self.coords[i][0] + ( w *self.coords[i][2]/a ), self.coords[i][1] + 0.01, self.coords[i][2])
-        
+
         self.coords = tuple(coords_list)
         self.colors = compute_color_fire(self.coords)
         # compute a sinusoidal x-coord displacement, different for each point.
@@ -110,14 +108,13 @@ class Fire(Mesh):
 # ---------------------- Smoke ---------------------------------------
 
 class Smoke(Mesh):
-    
+
     def __init__(self, shader):
 
         GL.glPointSize(37)
         self.coords = generate_coords_Cloud(pointnumber)
         self.colors = compute_color_smoke(self.coords)
         self.life = [np.random.random_integers(2000, 8000) for _ in range(pointnumber)]
-
 
         # send as position attribute to GPU, set uniform variable global_color.
         # GL_STREAM_DRAW tells OpenGL that attributes of this object
@@ -138,7 +135,7 @@ class Smoke(Mesh):
             else:
                 # Move the particle vertically upward
                 coords_list[i] = (self.coords[i][0] +( w *self.coords[i][2] / a ), self.coords[i][1] + 0.07, self.coords[i][2] + ( w *self.coords[i][2] / a ))
-        
+
         self.coords = tuple(coords_list)
         self.colors = compute_color_smoke(self.coords)
         # compute a sinusoidal x-coord displacement, different for each point.

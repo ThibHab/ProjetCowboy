@@ -1,15 +1,22 @@
 #version 330 core
 
-// global color variable
 uniform vec3 global_color;
-in vec3 position;
+in vec4 frag_position;
+in vec4 particle_color;
 
-// receiving interpolated color for fragment shader
-in vec3 fragment_color;
-
-// output fragment color for OpenGL
 out vec4 out_color;
 
 void main() {
-    out_color = vec4(0.8,0.1,0,1);
+    // calculate distance from center
+    float distance = length(frag_position.xy);
+
+    // set color based on distance from center
+    if (distance > 0.5) {
+        // red color for particles far from center
+        out_color = vec4(1.0, 0.0, 0.0, 1.0);
+    } else {
+        // yellow color for particles close to center
+        out_color = vec4(1.0, 1.0, 0.0, 1.0);
+    }
+    out_color *= particle_color;
 }
