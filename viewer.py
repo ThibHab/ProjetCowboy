@@ -113,7 +113,7 @@ class Fire(Mesh):
 
         # update position buffer on CPU, send to GPU attribute to draw with it
         coords = np.array(self.coords, 'f') + np.array(dp, 'f')
-        super().draw(primitives, attributes=dict(position=coords), **uniforms)
+        super().draw(primitives, attributes=dict(position=coords,color=self.colors), **uniforms)
 
 # ---------------------- Smoke ---------------------------------------
 
@@ -214,12 +214,14 @@ def main():
     """ create a window, add scene objects, then run rendering loop """
     viewer = Viewer()
 
+    shader = Shader("texture.vert", "texture.frag")
+    particle_shader = Shader("particle.vert", "particle.frag")
     skybox_shader = Shader("skybox/skybox.vert", "skybox/skybox.frag")
 
     viewer.add(Skybox(skybox_shader))
     viewer.add(*[mesh for file in sys.argv[1:] for mesh in load(file, shader)])
-    viewer.add(Fire(shader))
-    viewer.add(Smoke(shader))
+    viewer.add(Fire(particle_shader))
+    viewer.add(Smoke(particle_shader))
     if len(sys.argv) != 2:
         print('Usage:\n\t%s [3dfile]*\n\n3dfile\t\t the filename of a model in'
               ' format supported by assimp.' % (sys.argv[0],))
