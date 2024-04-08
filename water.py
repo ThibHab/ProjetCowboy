@@ -1,10 +1,11 @@
 from core import Shader, Viewer, Mesh
 import OpenGL.GL as GL 
 import numpy as np
+import glfw
 
 
 class River(Mesh):
-    def __init__(self, shader,riverpath, index=None, usage=GL.GL_STATIC_DRAW, **uniforms):
+    def __init__(self, shader,riverpath,ld, index=None, usage=GL.GL_STATIC_DRAW, **uniforms):
         h,w=np.shape(riverpath)
         distrib=np.linspace(-50,50,h)
         grid=[]
@@ -25,9 +26,19 @@ class River(Mesh):
                     break
         print(np.shape(grid))
         position = np.array(grid, 'f')
-        self.color=(1,1,1)
+        self.color=(0,0,1)
         attributes = dict(position=grid)
-        super().__init__(shader, attributes, index, usage, **uniforms)
+        r=np.random.uniform(0,2*3.1416)
+        dir=(np.cos(r),np.sin(r))
+        uniform=dict(dir=(0,1),
+                     k_d=(0,0,1),
+                     k_s=(1,1,1),
+                     k_a=(0.00235294117,0.00235294117,0.04823529411),
+                     s=10,
+                     light_dir=ld,
+                     time=0)
+        super().__init__(shader, attributes, index, usage, **uniform)
 
     def draw(self, primitives=GL.GL_TRIANGLES, **uniforms):
+        uniforms["time"]=glfw.get_time()
         super().draw(primitives=primitives,global_colors=self.color, **uniforms)

@@ -65,7 +65,6 @@ class Terrain(Mesh):
             light_dir=light_dir,
             k_s=(0.2382, 0.1093, 0),
             s=1)
-        self.color=(0,0,1)
         super().__init__(shader, attributes=attributes,index=index,**uniform)
 
     def draw(self, primitives=GL.GL_TRIANGLES, **uniforms):
