@@ -69,19 +69,22 @@ def compute_color_smoke(coords):
 # ----------------------- Fire ---------------------------------------
 class Fire(Mesh):
     
-    def __init__(self, shader):
+    def __init__(self, shader, light_dir):
 
         GL.glPointSize(37)
         self.coords = generate_coords_cone(pointnumber)
         self.colors = compute_color_fire(self.coords)
         self.life = [np.random.random_integers(500, 800) for _ in range(pointnumber)]
-        
+        uniform=dict(
+            light_dir=light_dir,
+            k_s=(0.2382, 0.1093, 0),
+            s=1)
 
         # send as position attribute to GPU, set uniform variable global_color.
         # GL_STREAM_DRAW tells OpenGL that attributes of this object
         # will change on a per-frame basis (as opposed to GL_STATIC_DRAW)
         super().__init__(shader, attributes=dict(position=self.coords, color=self.colors),
-                         usage=GL.GL_STREAM_DRAW, global_color=(0.5, 0.5, 0.8))
+                         usage=GL.GL_STREAM_DRAW, **uniform)
 
     def draw(self, primitives=GL.GL_POINTS, attributes=None, **uniforms):
         # Decrease TTL and reset position and TTL of dead particles
@@ -111,19 +114,23 @@ class Fire(Mesh):
 
 class Smoke(Mesh):
     
-    def __init__(self, shader):
+    def __init__(self, shader, light_dir):
 
         GL.glPointSize(37)
         self.coords = generate_coords_Cloud(pointnumber)
         self.colors = compute_color_smoke(self.coords)
         self.life = [np.random.random_integers(2000, 8000) for _ in range(pointnumber)]
 
-
+        uniform=dict(
+            light_dir=light_dir,
+            k_s=(0.2382, 0.1093, 0),
+            s=1)
+        
         # send as position attribute to GPU, set uniform variable global_color.
         # GL_STREAM_DRAW tells OpenGL that attributes of this object
         # will change on a per-frame basis (as opposed to GL_STATIC_DRAW)
         super().__init__(shader, attributes=dict(position=self.coords, color=self.colors),
-                         usage=GL.GL_STREAM_DRAW, global_color=(0.5, 0.5, 0.8))
+                         usage=GL.GL_STREAM_DRAW, **uniform)
 
     def draw(self, primitives=GL.GL_POINTS, attributes=None, **uniforms):
         # Decrease TTL and reset position and TTL of dead particles

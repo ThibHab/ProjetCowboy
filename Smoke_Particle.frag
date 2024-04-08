@@ -23,32 +23,37 @@ vec3 dark = vec3(0.5176470588235294,0.11372549019607843,0.06274509803921569);
 vec3 rouge = vec3(0.6941176470588235,0.13333333333333333,0.03529411764705882);
 float threshold = 0.09;
 
+vec3 toGrayscale(vec3 color) {
+    float gray = 0.21*color.r + 0.72*color.g + 0.07*color.b;
+    return vec3(gray, gray, gray);
+}
+
 vec3 defColor(float height){
     if(height<-0.1){
         return dark;
     }
     if(height<0.05){
-        return mix(yellow,base,(height+0.1)/0.15);
+        return toGrayscale( mix(yellow,base,(height+0.1)/0.15));
     }
     if(height<0.3 && height>0.3-threshold){
-        return mix(base,orange,(height-0.3+threshold)/threshold);
+        return toGrayscale( mix(base,orange,(height-0.3+threshold)/threshold));
     }
     if(height<0.5 && height>0.5-threshold){
-        return mix(base,pale,(height-0.5+threshold)/threshold);
+        return toGrayscale( mix(base,pale,(height-0.5+threshold)/threshold));
     }
     if(height<0.75 && height>0.75-threshold){
-        return mix(base,orange,(height-0.75+threshold)/threshold);
+        return toGrayscale( mix(base,orange,(height-0.75+threshold)/threshold));
     }
     if(height>0.3 && height<0.3+threshold){
-        return mix(rouge,rouge,(height-0.3)/threshold);
+        return toGrayscale( mix(rouge,rouge,(height-0.3)/threshold));
     }
     if(height>0.5 && height<0.5+threshold){
-        return mix(pale,rouge,(height-0.5)/threshold);
+        return toGrayscale( mix(pale,rouge,(height-0.5)/threshold));
     }
     if(height>0.75 && height<0.75+threshold){
-        return mix(orange,rouge,(height-0.75)/threshold);
+        return toGrayscale( mix(orange,rouge,(height-0.75)/threshold));
     }
-    return rouge;
+    return toGrayscale( rouge);
 }
 
 
