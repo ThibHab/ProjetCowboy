@@ -11,7 +11,7 @@ pointnumber = 128
 #wind
 w = 0.01
 #offset
-offset = (10,0,10)
+offset = (0,0,0)
 
 # -------------- Useful functions for fire -----------------------------
 def generate_coords_cone(n, offset, radius, height):
