@@ -64,8 +64,8 @@ def main():
     viewer.add(Skybox(skybox_shader))
     terrain=Terrain(terrain_shader,map_size,light_dir)
     river=River(river_shader,terrain.pente,light_dir)
-    fire = Fire(particle_shader, light_dir)
-    smoke = Smoke(smoke_Shader, light_dir)
+    fire = Fire(particle_shader, radius = 5, height = 15,offset=(20,20,20))
+    smoke = Smoke(smoke_Shader, radius = 5, height = 15,offset=(20,20,20))
 
     eagle=Node(load("Eagle.obj",eagle_shader))
     translate_keys = {0: vec(0, 15, 15), 20: vec(0, 15, 15) }
@@ -74,14 +74,13 @@ def main():
     keynode = animation.KeyFrameControlNode(translate_keys, rotate_keys, scale_keys)
     eagle.transform= translate(0,15,15) @ rotate ((0,1,0),90)
     keynode = animation.KeyFrameControlNode(translate_keys, rotate_keys, scale_keys)
-
-    keynode.add(eagle) 
-    viewer.add(keynode)
-    viewer.add(fire)
-    viewer.add(smoke)
+    keynode.add(eagle)
     viewer.add(terrain)
     viewer.add(river)
     viewer.add(Cactus(1.0, terrain.heigth, map_size, cactus_shader, light_dir))
+    viewer.add(keynode)
+    viewer.add(fire)
+    viewer.add(smoke)
 
     viewer.run()
 
