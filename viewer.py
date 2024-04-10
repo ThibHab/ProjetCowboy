@@ -10,6 +10,8 @@ from terrain import Terrain
 from transform import rotate, scale, translate
 from water import River
 from fire import Fire,Smoke
+import animation
+from transform import quaternion, translate, identity, rotate, scale,vec,quaternion_from_euler
 from cactus import Cactus, Cylinder
 
 class Axis(Mesh):
@@ -55,7 +57,8 @@ def main():
     skybox_shader = Shader(SHADERS_FOLDER + "skybox.vert", SHADERS_FOLDER + "skybox.frag")
     river_shader = Shader(SHADERS_FOLDER + "water.vert", SHADERS_FOLDER + "water.frag")
     smoke_Shader = Shader(SHADERS_FOLDER + "Smoke_Particle.vert", SHADERS_FOLDER + "Smoke_Particle.frag")
-    
+    eagle_shader = Shader(SHADERS_FOLDER + "eagle.vert",SHADERS_FOLDER + "eagle.frag")
+
     # start rendering loop
     light_dir = (-0.5, -1, 0)
     viewer.add(Skybox(skybox_shader))
@@ -63,9 +66,19 @@ def main():
     river=River(river_shader,terrain.pente,light_dir)
     fire = Fire(particle_shader, light_dir)
     smoke = Smoke(smoke_Shader, light_dir)
+
+    eagle=Node(load("Eagle.obj",eagle_shader))
+    translate_keys = {0: vec(0, 15, 15), 20: vec(0, 15, 15) }
+    scale_keys = {0:1,20:1}
+    rotate_keys = {0: quaternion(),10:quaternion_from_euler(0,-180,0),20:quaternion_from_euler(0,-360,0)}
+    keynode = animation.KeyFrameControlNode(translate_keys, rotate_keys, scale_keys)
+    eagle.transform= translate(0,15,15) @ rotate ((0,1,0),90)
+    keynode = animation.KeyFrameControlNode(translate_keys, rotate_keys, scale_keys)
+
+    keynode.add(eagle) 
+    viewer.add(keynode)
     viewer.add(fire)
     viewer.add(smoke)
-    viewer.add(terrain)
     viewer.add(terrain)
     viewer.add(river)
     viewer.add(Cactus(1.0, terrain.heigth, map_size, cactus_shader, light_dir))
