@@ -5,7 +5,7 @@ from core import Shader, Viewer, Mesh
 
 # -----------------------------------------------------------------------------
 pointnumber = 128
-w = 0.01
+w = 0.005
 def createFire(shaderfire,shadersmoke, radius, height,offset):
     return Fire(shaderfire, radius, height,offset),Smoke(shadersmoke, radius, height,offset)
 
@@ -57,7 +57,7 @@ class Fire(Mesh):
         self.radius = radius
         self.height = height
         self.coords = generate_coords_cone(pointnumber, self.offset, self.radius, self.height)
-        self.life = [np.random.random_integers(500, 800) for _ in range(pointnumber)]
+        self.life = [np.random.random_integers(0, 0) for _ in range(pointnumber)]
         uniform=dict()
 
         # send as position attribute to GPU, set uniform variable global_color.
@@ -101,7 +101,7 @@ class Smoke(Mesh):
         self.height = height
         self.offset = offset
         self.coords = generate_coords_Cloud(pointnumber, self.offset, self.radius, self.height)
-        self.life = [np.random.random_integers(2000, 8000) for _ in range(pointnumber)]
+        self.life = [np.random.random_integers(0, 0) for _ in range(pointnumber)]
 
         uniform=dict()
         
@@ -120,7 +120,7 @@ class Smoke(Mesh):
             # coords_list[i][1] = coords_list[i][1]
             if self.life[i] <= 0:
                 coords_list[i] = generate_coords_Cloud(1, self.offset, self.radius, self.height)[0]
-                self.life[i] = np.random.random_integers(100, 200)
+                self.life[i] = np.random.random_integers(200, 500)
             else:
                 # Move the particle vertically upward
                 coords_list[i] = (self.coords[i][0] +( w *self.coords[i][2] / self.height ), self.coords[i][1] + 0.07, self.coords[i][2] + ( w *self.coords[i][2] / self.height ))

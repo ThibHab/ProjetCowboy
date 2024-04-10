@@ -73,7 +73,7 @@ def main():
         x_pos = np.linspace(-50,50,map_size)[spx]
         z_pos = np.linspace(-50,50,map_size)[spy]
         y_pos = terrain.heigth[spx][spy]*7
-    fire,smoke=createFire(particle_shader,smoke_Shader,5,15,(x_pos,y_pos,z_pos))
+    fire,smoke=createFire(particle_shader,smoke_Shader,2,5,(x_pos,y_pos,z_pos))
 
     eagle=Node(load("Eagle.obj",eagle_shader))
     translate_keys = {0: vec(0, 15, 15), 20: vec(0, 15, 15) }
@@ -89,6 +89,8 @@ def main():
     viewer.add(keynode)
     viewer.add(fire)
     viewer.add(smoke)
+
+    print("\nKeys used : (for QWERTY keyboard)\n\nCactus\nAll keys used for the cactus are used to make a clockwise and a counter-clockwise rotation\n- move the left arm : KEY_LEFT and KEY_RIGHT\n- move the right arm : KEY_UP and KEY_DOWN \n- move the left forearm : KEY_KP_1 and KEY_KP_4 (numpad 1 and numpad 4)\n- move the right forearm : KEY_KP_3 and KEY_KP_6 (numpad 3 and numpad 6)\n\nAnimations\nSet time to 0 (used to reset animations) : KEY_SPACE (space bar)\n\nTextures\nChange polygon mode display : KEY_W\n\nGeneral\nQuit : KEY_Q or KEY_ESCAPE\n")
 
     viewer.run()
 

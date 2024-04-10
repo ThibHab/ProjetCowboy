@@ -10,6 +10,6 @@ uniform mat4 projection;
 out float height;
 
 void main() {
-    height = (position.y-offset.y)/8;
+    height = (position.y-offset.y)/5;
     gl_Position = projection * view * model * vec4(position, 1);
 }
