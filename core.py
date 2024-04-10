@@ -10,7 +10,7 @@ import numpy as np                  # all matrix manipulations & OpenGL args
 import assimpcy                     # 3D resource loader
 
 # our transform functions
-from transform import Trackball, identity
+from transform import Trackball, identity, rotate, translate
 
 # initialize and automatically terminate glfw on exit
 glfw.init()
@@ -188,6 +188,28 @@ class Node:
         for child in (c for c in self.children if hasattr(c, 'key_handler')):
             child.key_handler(key)
 
+class RotationControlNode(Node):
+    def __init__(self, key_left, key_right, axis, angle=0, children=(), trans=()):
+        if (trans != ()):
+            self.trans = trans
+            super().__init__(transform=translate(trans) @ rotate(axis, angle) , children=children)
+        else :
+            self.trans = ()
+            super().__init__(transform=rotate(axis, angle), children=children)
+
+        self.angle, self.axis = angle, axis
+        self.key_left, self.key_right = key_left, key_right
+
+    def key_handler(self, key):
+        self.angle += 5 * int(key == self.key_left)
+        self.angle -= 5 * int(key == self.key_right)
+
+        if (self.trans != ()):
+            self.transform = translate(self.trans) @ rotate(self.axis, self.angle)
+        else:
+            self.transform = rotate(self.axis, self.angle)
+
+        super().key_handler(key)
 
 # -------------- 3D resource loader -------------------------------------------
 MAX_BONES = 128

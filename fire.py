@@ -7,10 +7,10 @@ from core import Shader, Viewer, Mesh
 pointnumber = 128
 
 #cone values Height then Radius
-a= 50
-r = 10
+a= 20
+r = 5
 #wind
-w = 0.1
+w = 0.01
 dwind = 0.0 # derivative aka speed of wind
 # -------------- Useful functions for fire -----------------------------
 def generate_coords_cone(n):
@@ -24,10 +24,10 @@ def generate_coords_cone(n):
         t = 2 * np.pi * np.random.random()
 
         #assigning values to x,y,z
-        x = local_r*np.sin(t)
-        y = local_r * np.cos(t)
-        z = h
-        points.append((x, y, -z+a))
+        x = local_r * np.cos(t)
+        y =  h 
+        z =  local_r*np.sin(t)
+        points.append((x, -y+a, z))
     return tuple(map(tuple, points))
 
 def compute_color_fire(coords):
@@ -50,10 +50,10 @@ def generate_coords_Cloud(n):
         theta = np.random.random() * 2 * np.pi
 
         #assigning values to x,y,z
-        x = r * np.sqrt(np.random.random()) 
-        y = local_r * np.cos(theta)
-        z = local_r * np.sin(theta) - a/3
-        points.append((x, y, -z+ a/3))
+        x =  local_r * np.cos(theta) 
+        y =  local_r * np.sin(theta) - a/3
+        z =  r * np.sqrt(np.random.random())
+        points.append((x,y+a, z))
     return tuple(map(tuple, points))
 
 
@@ -69,19 +69,22 @@ def compute_color_smoke(coords):
 # ----------------------- Fire ---------------------------------------
 class Fire(Mesh):
     
-    def __init__(self, shader):
+    def __init__(self, shader, light_dir):
 
         GL.glPointSize(37)
         self.coords = generate_coords_cone(pointnumber)
         self.colors = compute_color_fire(self.coords)
         self.life = [np.random.random_integers(500, 800) for _ in range(pointnumber)]
-        
+        uniform=dict(
+            light_dir=light_dir,
+            k_s=(0.2382, 0.1093, 0),
+            s=1)
 
         # send as position attribute to GPU, set uniform variable global_color.
         # GL_STREAM_DRAW tells OpenGL that attributes of this object
         # will change on a per-frame basis (as opposed to GL_STATIC_DRAW)
         super().__init__(shader, attributes=dict(position=self.coords, color=self.colors),
-                         usage=GL.GL_STREAM_DRAW, global_color=(0.5, 0.5, 0.8))
+                         usage=GL.GL_STREAM_DRAW, **uniform)
 
     def draw(self, primitives=GL.GL_POINTS, attributes=None, **uniforms):
         # Decrease TTL and reset position and TTL of dead particles
@@ -95,7 +98,7 @@ class Fire(Mesh):
                 self.life[i] = np.random.random_integers(100, 200)
             else:
                 # Move the particle vertically upward
-                coords_list[i] = (self.coords[i][0] + ( w *self.coords[i][2]/a ), self.coords[i][1] + 0.02, self.coords[i][2])
+                coords_list[i] = (self.coords[i][0] + ( w *self.coords[i][2]/a ), self.coords[i][1] + 0.01, self.coords[i][2])
         
         self.coords = tuple(coords_list)
         self.colors = compute_color_fire(self.coords)
@@ -111,19 +114,23 @@ class Fire(Mesh):
 
 class Smoke(Mesh):
     
-    def __init__(self, shader):
+    def __init__(self, shader, light_dir):
 
         GL.glPointSize(37)
         self.coords = generate_coords_Cloud(pointnumber)
         self.colors = compute_color_smoke(self.coords)
         self.life = [np.random.random_integers(2000, 8000) for _ in range(pointnumber)]
 
-
+        uniform=dict(
+            light_dir=light_dir,
+            k_s=(0.2382, 0.1093, 0),
+            s=1)
+        
         # send as position attribute to GPU, set uniform variable global_color.
         # GL_STREAM_DRAW tells OpenGL that attributes of this object
         # will change on a per-frame basis (as opposed to GL_STATIC_DRAW)
         super().__init__(shader, attributes=dict(position=self.coords, color=self.colors),
-                         usage=GL.GL_STREAM_DRAW, global_color=(0.5, 0.5, 0.8))
+                         usage=GL.GL_STREAM_DRAW, **uniform)
 
     def draw(self, primitives=GL.GL_POINTS, attributes=None, **uniforms):
         # Decrease TTL and reset position and TTL of dead particles
@@ -137,7 +144,7 @@ class Smoke(Mesh):
                 self.life[i] = np.random.random_integers(100, 200)
             else:
                 # Move the particle vertically upward
-                coords_list[i] = (self.coords[i][0] +( w *self.coords[i][2] / a ), self.coords[i][1] + 0.07, self.coords[i][2])
+                coords_list[i] = (self.coords[i][0] +( w *self.coords[i][2] / a ), self.coords[i][1] + 0.07, self.coords[i][2] + ( w *self.coords[i][2] / a ))
         
         self.coords = tuple(coords_list)
         self.colors = compute_color_smoke(self.coords)

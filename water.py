@@ -25,13 +25,10 @@ class River(Mesh):
                         nb+=1
                     break
         print(np.shape(grid))
-        position = np.array(grid, 'f')
         self.color=(0,0,1)
         attributes = dict(position=grid)
         r=np.random.uniform(0,2*3.1416)
-        dir=(np.cos(r),np.sin(r))
-        uniform=dict(dir=(0,1),
-                     k_d=(0,0,1),
+        uniform=dict(k_d=(0,0,1),
                      k_s=(1,1,1),
                      k_a=(0.00235294117,0.00235294117,0.04823529411),
                      s=10,
