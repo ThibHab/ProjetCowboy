@@ -79,9 +79,3 @@ class Skinned:
         world_transforms = [node.world_transform for node in self.bone_nodes]
         uniforms['bone_matrix'] = world_transforms @ self.bone_offsets
         self.mesh.draw(**uniforms)
-
-my_keyframes = KeyFrames({0: 1, 3: 7, 6: 20})
-print(my_keyframes.value(1.5))
-
-vector_keyframes = KeyFrames({0: vec(1, 0, 0), 3: vec(0, 1, 0), 6: vec(0, 0, 1)})
-print(vector_keyframes.value(1.5))   # should display numpy vector (0.5, 0.5, 0)

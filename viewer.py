@@ -9,10 +9,10 @@ from texture import CubeMapTexture, Texture, Textured
 from terrain import Terrain
 from transform import rotate, scale, translate
 from water import River
-from fire import Fire,Smoke
+from fire import Fire,Smoke,createFire
 import animation
 from transform import quaternion, translate, identity, rotate, scale,vec,quaternion_from_euler
-from cactus import Cactus, Cylinder
+from cactus import Cactus, Cylinder,get_map_height_coords
 
 class Axis(Mesh):
     """ Axis object useful for debugging coordinate frames """
@@ -64,8 +64,16 @@ def main():
     viewer.add(Skybox(skybox_shader))
     terrain=Terrain(terrain_shader,map_size,light_dir)
     river=River(river_shader,terrain.pente,light_dir)
-    fire = Fire(particle_shader, radius = 5, height = 15,offset=(20,20,20))
-    smoke = Smoke(smoke_Shader, radius = 5, height = 15,offset=(20,20,20))
+    spx,spy=np.random.randint(0,map_size),np.random.randint(0,map_size)
+    x_pos = np.linspace(-50,50,map_size)[spx]
+    z_pos = np.linspace(-50,50,map_size)[spy]
+    y_pos = terrain.heigth[spx][spy]*7
+    while(terrain.heigth[spx][spy]<0):
+        spx,spy=np.random.randint(0,map_size),np.random.randint(0,map_size)
+        x_pos = np.linspace(-50,50,map_size)[spx]
+        z_pos = np.linspace(-50,50,map_size)[spy]
+        y_pos = terrain.heigth[spx][spy]*7
+    fire,smoke=createFire(particle_shader,smoke_Shader,5,15,(x_pos,y_pos,z_pos))
 
     eagle=Node(load("Eagle.obj",eagle_shader))
     translate_keys = {0: vec(0, 15, 15), 20: vec(0, 15, 15) }

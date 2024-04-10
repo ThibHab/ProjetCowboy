@@ -21,10 +21,6 @@ class Texture:
             GL.glTexParameteri(tex_type, GL.GL_TEXTURE_MIN_FILTER, min_filter)
             GL.glTexParameteri(tex_type, GL.GL_TEXTURE_MAG_FILTER, mag_filter)
             GL.glGenerateMipmap(tex_type)
-            print(f'Loaded texture {tex_file} ({tex.width}x{tex.height}'
-                  f' wrap={str(wrap_mode).split()[0]}'
-                  f' min={str(min_filter).split()[0]}'
-                  f' mag={str(mag_filter).split()[0]})')
         except FileNotFoundError:
             print("ERROR: unable to load texture file %s" % tex_file)
 
@@ -60,7 +56,6 @@ class CubeMapTexture(Textured):
                 GL.glTexImage2D(GL.GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0,
                                 GL.GL_RGBA, skybox_face.width, skybox_face.height, 0,
                                 GL.GL_RGBA, GL.GL_UNSIGNED_BYTE, skybox_face.tobytes())
-                print(f'Loaded skybox face {face}.{ext} ({skybox_face.width}x{skybox_face.height})')
 
             GL.glTexParameteri(self.type, GL.GL_TEXTURE_MIN_FILTER, GL.GL_LINEAR)
             GL.glTexParameteri(self.type, GL.GL_TEXTURE_MAG_FILTER, GL.GL_LINEAR)

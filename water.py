@@ -24,7 +24,6 @@ class River(Mesh):
                         index+=(nb*4,nb*4+1,nb*4+2 , nb*4+1,nb*4+3,nb*4+2)
                         nb+=1
                     break
-        print(np.shape(grid))
         self.color=(0,0,1)
         attributes = dict(position=grid)
         r=np.random.uniform(0,2*3.1416)

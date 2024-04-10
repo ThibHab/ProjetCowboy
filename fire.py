@@ -5,13 +5,9 @@ from core import Shader, Viewer, Mesh
 
 # -----------------------------------------------------------------------------
 pointnumber = 128
-
-#cone values Height then Radius
-
-#wind
 w = 0.01
-#offset
-offset = (0,0,0)
+def createFire(shaderfire,shadersmoke, radius, height,offset):
+    return Fire(shaderfire, radius, height,offset),Smoke(shadersmoke, radius, height,offset)
 
 # -------------- Useful functions for fire -----------------------------
 def generate_coords_cone(n, offset, radius, height):
@@ -56,7 +52,7 @@ class Fire(Mesh):
     
     def __init__(self, shader, radius, height,offset):
 
-        GL.glPointSize(37)
+        GL.glPointSize(15)
         self.offset=offset
         self.radius = radius
         self.height = height
@@ -100,7 +96,7 @@ class Smoke(Mesh):
     def __init__(self, shader, radius, height,offset):
 
         
-        GL.glPointSize(37)
+        GL.glPointSize(15)
         self.radius = radius
         self.height = height
         self.offset = offset
