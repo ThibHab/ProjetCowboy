@@ -20,7 +20,7 @@ void main() {
     w_normal = (model * vec4(normal, 0)).xyz;
     w_position =(model*vec4(position,1)).xyz;     
 
-    height= length(position.xy)/7;
+    height= length(position.xy)/30;
 
     gl_Position = projection * view * model * vec4(position, 1);
     

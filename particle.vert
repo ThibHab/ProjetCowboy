@@ -7,6 +7,7 @@ uniform vec3 global_color;
 in vec3 position;
 in vec3 color;
 in vec3 normal;
+in vec3 offset;
 
 // global matrix variables
 uniform mat4 model;
@@ -20,7 +21,7 @@ void main() {
     w_normal = (model * vec4(normal, 0)).xyz;
     w_position =(model*vec4(position,1)).xyz;     
 
-    height= length(position.xy)/7;
+    height= (length(position.xy)-length(offset.xy))/8;
 
     gl_Position = projection * view * model * vec4(position, 1);
     
